@@ -17,15 +17,15 @@ public class Main{
     static int seatNum, rowNum;
     static int price = 1;
     static double percent = 1;
-    /***
+     /***
      * Основной метод main принимает во вход row и seat, после вызывает метод setCinema(row, seat).
-     * После выдает пользовательский меню для выбора дальнейших действии.
-     * 1. Места в кинотеатре
-     * 2. Покупка билета
-     * 3. Статистика
-     * 4. Выход
-     * После вызывает метод switchMode(cases).
-     ***/
+      *  После выдает пользовательский меню для выбора дальнейших действии.
+      *  1. Места в кинотеатре
+      *  2. Покупка билета
+      *  3. Статистика
+      *  4. Выход
+      *  После вызывает метод switchMode(cases).
+     */
     public static void main(String[] args) {
         // Write your code here
         System.out.println("Enter the number of rows:");
@@ -51,11 +51,11 @@ public class Main{
     }
     /***
      * Метод переключатель по значении cases в методе main переключает на следующий метод.
+     * @param cases - вводимое значение пользователем
      * 1 - переходит к методу вывода всех мест в массиве(displayCinema)
      * 2 - переходит к методу для выбора мест(choosePlace)
      * 3 - переходит к методу вывода статистики(statistics)
-     *
-     ***/
+     * */
     public static void switchMode(int cases) {
         switch(cases){
             case 1: displayCinema(); break;
@@ -67,7 +67,9 @@ public class Main{
     /***
      * Метод заполняет массив размером количество рядов умноженное на количество мест и
      * заполняет ячейки массива значением S.
-     ***/
+     * @param row - количество рядов
+     * @param seat - количество мест
+     */
     public static void setCinema(int row, int seat) {
         for(int i = 0; i <= row; ++i) {
             if(i > 0) {
@@ -85,7 +87,7 @@ public class Main{
     }
     /***
      * Показывает все места в кинотеатре (свободные S и не свободные B)
-     ***/
+     */
     public static void displayCinema() {
         System.out.println("Cinema: ");
         for(int i = 0; i <= row; ++i) {
@@ -95,9 +97,16 @@ public class Main{
             System.out.println(" ");
         }
     }
-    /***
 
-     ***/
+    /***
+     * Метод дает пользователю выбрать место для покупки.
+     * Если 0 > rowNum(выбранный ряд) > row(общее количество рядов)
+     * или 0 > seatNum(выбранное место) > seat(общее количество мест)
+     * то переводит на метод wrongInput.
+     * Если выбранное место занято, то переводит на метод purchasedTicket.
+     * Если все корректно, то переводит на метод buyTickets и добавляет +1 в ticket.
+     * ticket++ калькулятор купленных мест.
+     */
     public static void choosePlace() {
         System.out.println("Enter a row number: ");
         rowNum = scanner.nextInt();
@@ -114,16 +123,34 @@ public class Main{
         }
 
     }
+
+    /***
+     * Возвращает текст Wrong input!
+     * После перенаправляет в метод choosePlace.
+     */
     public static void wrongInput() {
         System.out.println("Wrong input!");
         System.out.println(" ");
         choosePlace();
     }
+    /***
+     * Возвращает текст That ticket has already been purchased!
+     * После перенаправляет в метод choosePlace.
+     */
     public static void purchasedTicket() {
         System.out.println("That ticket has already been purchased!");
         System.out.println(" ");
         choosePlace();
     }
+
+    /***
+     * Возвращает сумму по купленному месту.
+     * Если общее кол-во мест в кинотеатре меньше 60, то сумму считает по методу SmallCinema,
+     * если больше 60, то по методу LargeCinema.
+     * И каждый раз в сумму увеличивает на +1.
+     * sum - калькулятор полученных средств по проданным местам.
+     * И в конце меняет значение в массиве Cinema на B по купленному месту.
+     */
     public static void buyTickets() {
         System.out.print("Ticket price: $");
         int allSeats = (Cinema.length - 1) * (Cinema[0].length - 1);
@@ -137,12 +164,32 @@ public class Main{
         Cinema[rowNum][seatNum] = "B";
     }
 
+    /***
+     * Показывает цену на билет в маленьком зале.
+     * @return - возвращает сумму 10.
+     */
     public static int SmallCinema() {
         return 10;
     }
+
+    /***
+     * Показывает цену на билет в большом зале.
+     * @param rowNum - выбранный ряд
+     * @param seatNum - выбранное место в том ряду
+     * @return - возвращает сумму в зависимости в каком ряду расположено место.
+     * Передняя половина 10$, задняя половина 8$.
+     */
     public static int LargeCinema(int rowNum, int seatNum) {
         return rowNum > row/2 ? 8 : 10 ;
     }
+
+    /***
+     * Возвращает статистику:
+     * Количество проданных мест;
+     * Процент по проданным местам;
+     * Полученная сумма по проданным местам;
+     * Общая сумма по всем местом.
+     */
     public static void statistics() {
         int allSeats = (Cinema.length - 1) * (Cinema[0].length - 1);
         percent = /*percent + */((double)ticket * 100) / allSeats;
@@ -151,6 +198,10 @@ public class Main{
         System.out.println("Current income: $" + sum);
         System.out.println("Total income: $" + totalIncome());
     }
+
+    /***
+     * @return - считает и возвращает общую сумму по всем местам.
+     */
     public static int totalIncome() {
         int part1 = row/2;
         int part2 = row - part1;
